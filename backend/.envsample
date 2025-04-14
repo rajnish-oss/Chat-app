@@ -1,0 +1,8 @@
+PORT = 8800
+db_password = RQfXMPwHJYcvJbMI
+MONGO_URL = mongodb+srv://rajnishpandey844:RQfXMPwHJYcvJbMI@cluster0.zcn5l9a.mongodb.net/
+JWT_SECRET = asjosjbtoo8348nogtohgbghdSFB
+
+CLOUD_NAME=dlp7aivlu
+CLOUD_SECRET=aaDDCrLPIAWn72rIsW2FxSIBN3s
+CLOUD_API_KEY=232943262795123
