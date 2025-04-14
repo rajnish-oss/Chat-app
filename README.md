@@ -5,8 +5,18 @@ check following files for debug
 
 
 ./backend/index.js
+
+
 .frontend/src/components/Sidebar.jsx
+
+
 .frontend/src/components/Socket.jsx
+
+
 .frontend/src/hooks/useSocket.js
+
+
 .frontend/src/pages/MessageArea.jsx
+
+
 .frontend/src/redux
