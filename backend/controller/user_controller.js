@@ -71,7 +71,14 @@ export const register = asyncHandler(async(req,res)=>{
 
      const option = {
       httpOnly:true,
-      secure:true
+      secure:false
+     }
+
+     if(!refreshToken || !accessToken){
+      throw new ApiError(
+         200,
+         "tokes not generated"
+      )
      }
 
      return res.status(200)
@@ -118,12 +125,21 @@ export const login = asyncHandler(async(req,res)=>{
 
      const {refreshToken,accessToken} = await generateAccessAndRefreshToken(user._id)
 
+     if(!refreshToken || !accessToken){
+      throw new ApiError(
+         200,
+         "tokes not generated"
+      )
+     }
+
      const loggedInUser = await User.findById(user._id).select("-refreshToken -password")
 
      const option = {
       httpOnly:true,
-      secure:true
+      secure:false
      }
+
+     
 
      res.status(200)
      .cookie("refreshToken",refreshToken,option)
@@ -137,7 +153,20 @@ export const login = asyncHandler(async(req,res)=>{
      )
 })
 
+export const getAllUser = asyncHandler(async(req,res)=>{
+      const users = await User.find().select("-password -refreshToken")
+
+      res.status(200).json(
+         new ApiResponse(
+            200,
+            users,
+            "all user sent"
+         )
+      )
+})
+
 export const uploadAvatar = asyncHandler(async(req,res)=>{
+   console.log(req.files.avatar[0].path)
    const avatarPath = req.files.avatar[0].path
    const userId = req.user._id
 
@@ -157,7 +186,20 @@ export const uploadAvatar = asyncHandler(async(req,res)=>{
     res.status(200).json(
       new ApiResponse(
       200,
-      user,
+      user.avatar,
       "profile photo updated")
     )
+})
+
+export const logout = asyncHandler(async(req,res)=>{
+   const userId = req.user._Id
+
+   if(!userId){
+      throw new ApiError(
+         400,
+         "userID missing"
+      )
+   }
+
+   const user = await User.findByIdand
 })

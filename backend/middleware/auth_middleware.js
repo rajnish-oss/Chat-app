@@ -26,11 +26,11 @@ const auth = asyncHandler(async(req,res,next) =>{
 
     if(!user){
         throw new ApiError(
-            400,
+            501,
             "user not found"
         )
     }
-
+    console.log("id is",user._id)
     req.user = user
     next()
 })

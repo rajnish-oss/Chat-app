@@ -21,7 +21,7 @@ const CreateChat = ({setNewChat}) => {
     }
 
   return (
-    <div className='w-fit h-fit border-white/5 bg-white/5 p-4 rounded-2xl relative'>
+    <div className='w-fit h-fit border-white/5 bg-white/5 p-4 rounded-2xl relative z-50 right-47'>
       <form action="" className='relative' onSubmit={handleSubmit(submitHandler)}>
 
       <IoMdClose className='absolute right-0 text-xl text-white' onClick={()=> setNewChat(false)}/>

@@ -12,12 +12,12 @@ const chatSchema = new mongoose.Schema({
         required:true,
         default:false
     },
-    attachments:[{
+    attachments:{
         type:{url:String,
             path:String}
         ,
-        default:[]
-    }],
+        default:{}
+    },
     lastmessage:{
         type:Schema.Types.ObjectId,
         ref:"Message"

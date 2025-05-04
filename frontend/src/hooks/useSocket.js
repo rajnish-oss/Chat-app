@@ -6,17 +6,22 @@ import {
     userTyping,
     userStoppedTyping,
   } from '../redux/slice/socketSlice.js'
+  import { storeMessage } from '../redux/slice/msgSlice.js'
 
-const useSocket = () => {
+const useSocket = ({userID,selectedUser}) => {
     const dispatch = useDispatch()
-    console.log("useSocket")
     useEffect(()=>{
         Socket.connect()
 
+
+        Socket.emit('setup', userID)
+        Socket.emit('join chat',selectedUser)
+        
         Socket.on("received message",(message)=>{
-            console.log("this  useSocket",message)
+        
             dispatch(newMessageReceived(message))
-            console.log("this is from useSocket",message.content)
+            dispatch(storeMessage(message))
+           
         })
 
         Socket.on("typing",(message)=>{
@@ -34,7 +39,7 @@ const useSocket = () => {
         Socket.off("stop typing");
         Socket.disconnect();
       };
-    }, [dispatch]);
+    }, [dispatch,userID]);
 }
 
 export default useSocket

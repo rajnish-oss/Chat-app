@@ -12,18 +12,26 @@ const MessageArea = lazy(()=>import('./pages/MessageArea'))
 function Layout(){
   const user = useSelector((state)=>state.auth.user)
   const location = useLocation()
+  const [sidebar,setSidebar] = useState(false)
   const[selectedChatId,setSelectedChatId] = useState("")
 
   return user ? (
-    <div className="h-screen w-screen bg-[#050C1A] flex items-center">
-      <aside>
-        <Sidebar selectedChatId={selectedChatId} setSelectedChatId={setSelectedChatId} />
+    <div className="h-fit w-screen bg-[#050C1A] flex items-center relative justify-between">
+      <aside className='relative z-20 left-2 '>
+        <Sidebar selectedChatId={selectedChatId} setSelectedChatId={setSelectedChatId} sidebar={sidebar} setSidebar={setSidebar} />
       </aside>
 
-      <main>
-        <MessageArea selectedChatId={selectedChatId} setSelectedChatId={setSelectedChatId}/>
-        <Outlet/>
-      </main>
+      <main className="">
+          <MessageArea 
+            selectedChatId={selectedChatId} 
+            setSelectedChatId={setSelectedChatId}
+            sidebar={sidebar}
+            setSidebar={setSidebar}
+          />
+          <div className="flex-1 overflow-y-auto">
+            <Outlet />
+          </div>
+        </main>
     </div>
   ):<Navigate to="/createUser" state={{from:location}} replace/>
 }

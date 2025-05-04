@@ -1,11 +1,11 @@
 import {createAsyncThunk,createSlice,isRejectedWithValue} from '@reduxjs/toolkit'
-import axios from 'axios'
-const URL = 'http://localhost:8800/api/chat/'
+import axiosInstance from '../axiosInstance'
+import { act } from 'react'
 
 export const createChat = createAsyncThunk(
   'chat/createChat',async(chatData,{rejectWithValue})=>{
     try {
-      const res = await axios.post(URL + 'OnOchat',chatData,{
+      const res = await axiosInstance.post('chat/OnOchat',chatData,{
         withCredentials:true,
       })
 
@@ -15,7 +15,7 @@ export const createChat = createAsyncThunk(
 
       return res.data
     } catch (error) {
-      console.log(error)
+      console.error(error.response.data)
       rejectWithValue(error.response.data.message)
     }
   }
@@ -24,17 +24,62 @@ export const createChat = createAsyncThunk(
 export const getAllChats = createAsyncThunk(
     'chat/getAllChat',async(__,{rejectWithValue})=>{
         try {
-            const res = await axios.get(URL + "getChats",{
+            const res = await axiosInstance.get( "chat/getChats",{
                 withCredentials:true
             })
               
-            console.log(res.data)
+        
             return res.data
         } catch (error) {
             console.log(error)
             rejectWithValue(error.response.data.message)
         }
     }
+)
+
+export const createGchat = createAsyncThunk(
+  'chat/createGchat',async(data,{rejectWithValue})=>{
+    try {
+      const res = await axiosInstance.post("chat/createGC",data,{
+        withCredentials:true,
+        headers:{
+          'Content-Type': 'multipart/form-data',
+        }
+      })
+
+      return res.data
+    } catch (error) {
+      console.error(error.response)
+    }
+  }
+)
+
+export const GCdp = createAsyncThunk(
+  'chat/GCdp',async(data,{rejectWithValue})=>{
+    try {
+      const res = await axiosInstance.post("chat/GCdp",data,{
+        withCredentials:true
+      })
+
+      return res.data
+    } catch (error) {
+      console.error(error.response)
+    }
+  }
+)
+
+export const userLeft = createAsyncThunk(
+  'chat/userLeft',async(data,{rejectWithValue})=>{
+    try {
+      const res = await axiosInstance.put('chat/userLeft',data,{
+        withCredentials:true
+      })
+
+      return res.data
+    } catch (error) {
+      console.error(error)
+    }
+  }
 )
 
 const initialState = {
@@ -73,7 +118,19 @@ const chatSlice = createSlice({
         state.status = "failled",
         state.error = action.payload
       })
+      .addCase(createGchat.fulfilled,(state,action)=>{
+        state.status = "succeded",
+        state.chat = action.payload
+      })
+      .addCase(GCdp.fulfilled,(state,action)=>{
+        state.status = "succeded",
+        console.log(JSON.parse(JSON.stringify(state.chat)))
+      })
+      .addCase(userLeft.fulfilled,(state,action)=>{
+        state.status = "succeded" 
+      })
     }
 })
 
+export const {changeChatName} = chatSlice.actions
 export default chatSlice.reducer

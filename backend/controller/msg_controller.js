@@ -49,6 +49,13 @@ export const getAllMessage = asyncHandler(async(req,res)=>{
         path:"chat",populate:{path:"users",select:"username email"}
       })
 
+      if(!messages){
+        throw new ApiError(
+          200,
+          "message is not found"
+        )
+      }
+
       res.status(200).json(
         new ApiResponse(
          200,
