@@ -4,11 +4,11 @@ import { asyncHandler } from '../utils/asyncHandler.js'
 import {ApiResponse} from '../utils/ApiResponse.js'
 import User from '../model/user_model.js'
 import { uploadToCloudinary } from '../utils/cloudinary.js'
+import { json } from 'express'
 
 export const OnOchat = asyncHandler(async(req,res)=>{
     const userId = req.user._id
     const{username} = req.body
-
     if(!username){
         throw new ApiError(
             401,
@@ -17,6 +17,13 @@ export const OnOchat = asyncHandler(async(req,res)=>{
     }
 
     const user = await User.findOne({username:username})
+                            
+    if(!user){
+        throw new ApiError(
+            400,
+            "user not present in OnOchatd"
+        )
+    }
 
     const chat = await Chat.findOne({
         isGroup:false,
@@ -25,10 +32,12 @@ export const OnOchat = asyncHandler(async(req,res)=>{
     .populate("users","-password")
     .populate("lastmessage")
 
-    const isChat = await User.populate(chat,{
-        path:"lastmessage.sender",
-        select:"username email"
-    })
+    const isChat = chat
+        ? await User.populate(chat, {
+              path: "lastmessage.sender",
+              select: "username email",
+          })
+        : null;
 
     if(isChat){
         return res.status(200).json(
@@ -61,7 +70,7 @@ export const OnOchat = asyncHandler(async(req,res)=>{
 
 export const getAllChats = asyncHandler(async(req,res)=>{
    const userId = req.user._id
-   console.log(userId)
+   console.log("from get all chats",userId)
    if(!userId){
     throw new ApiError(
         400,
@@ -94,8 +103,11 @@ export const getAllChats = asyncHandler(async(req,res)=>{
 })
 
 export const createGC = asyncHandler(async(req,res)=>{
+    console.log("req.body",req.files)
     const {name,users_id} = req.body
+    const dpPath = req.files.dp[0]?.path
     const userId = req.user._id
+    console.log("from createGC",name,users_id)
 
     if(!name || !users_id){
         throw new ApiError(
@@ -103,16 +115,20 @@ export const createGC = asyncHandler(async(req,res)=>{
             "not enough data check createGC"
         )
     }
+  
+    const dp = await uploadToCloudinary(dpPath)
+    const userArray  = JSON.parse(users_id)
 
     const GC = await Chat.create({
         name,
         isGroup : true,
         admin:userId,
-        users:[userId] 
+        attachments:dp,
+        users:[userId]
     }
     )
 
-        GC.users.push(...users_id)
+        GC.users.push(...userArray)
 
     await GC.save({validateBeforeSave:false})
 
@@ -138,6 +154,31 @@ export const createGC = asyncHandler(async(req,res)=>{
             )
         )
     }
+})
+
+export const GCdp = asyncHandler(async(req,res)=>{
+    const dpPath = req.files
+    const chatId = req.body
+
+    if(!dpPath){
+        console.log(req.files)
+        throw new ApiError(
+            400,
+            "dp missing"
+        )
+    }
+    
+    const dp = await uploadToCloudinary(dpPath)
+    const chat = await Chat.findById(chatId)
+
+    chat.attachments = dp
+
+    res.status(200).json(
+        200,
+        chat.attachments,
+        "chat dp uploaded"
+    )
+
 })
 
 export const renameGC = asyncHandler(async(req,res)=>{
@@ -284,28 +325,15 @@ export const removeUser = asyncHandler(async(req,res)=>{
 
 export const userLeft = asyncHandler(async(req,res)=>{
     const {chatId} = req.body
+    console.log("userLeft",chatId)
     const userId = req.user._id
 
-    if(!chatId ){
-        throw new ApiError(
-            401,
-            "check userLeft"
-        )
-    }
-
-    const chat = await Chat.findById(chatId)
-                 .populate("users","-password")
-                 .populate("admin","-password")
-
-    chat.users.pull(userId)
-    await chat.save({validateBeforeSave:false})
-
-    const newChat = await chat.populate("users","-password")
-                              .populate("admin","-password")
+    const chat = await Chat.findByIdAndDelete(chatId)
+                
     
     res.status(200).json(
         new ApiResponse(200,
-        newChat,
+        chat,
         "user left successfully")
     )
 })

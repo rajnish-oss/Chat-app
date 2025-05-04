@@ -16,7 +16,7 @@ app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({
-    origin:'http://localhost:3000',
+    origin:["http://localhost:3000","http://192.168.1.110:3000"],
     methods:["GET","POST","DELETE","PUT"],
     credentials: true,
 }))
@@ -24,7 +24,7 @@ app.use("/api",routes)
 
 const io = new Server(server,{
     cors:{
-        origin:"http://localhost:3000",
+        origin:["http://localhost:3000","http://192.168.1.110:3000"],
         credentials:true
     }}
 )
@@ -60,12 +60,11 @@ io.on("connection",(socket)=>{
         }
 
         chat.users.forEach((user)=>{
-            console.log(user)
-            if(user._id !== newMessage.sender._id){
-                console.log("Emitting to:", user._id)
-                   socket.to(user._id).emit("received message",newMessage.content)
-                   console.log("message sent",newMessage.content)}
-            
+            if(user._id === newMessage.sender._id){
+               socket.emit("received message",newMessage)
+            }else{
+                 socket.to(user._id).emit("received message",newMessage)
+            }    
         })
         
     })
