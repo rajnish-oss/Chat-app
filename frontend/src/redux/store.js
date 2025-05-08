@@ -3,12 +3,14 @@ import authReducer from './slice/authSlice.js'
 import chatReducer from './slice/chatSlice.js'
 import socketReducer from './slice/socketSlice.js'
 import messageReducer from './slice/msgSlice.js'
+import AIReducer from './slice/AISlice.js'
 
 export const store = configureStore({
     reducer: {
         auth:authReducer,
         chat:chatReducer,
         socket:socketReducer,
-        message:messageReducer
+        message:messageReducer,
+        AI:AIReducer
     },
   })

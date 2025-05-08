@@ -1,6 +1,6 @@
 import {createSlice,createAsyncThunk} from '@reduxjs/toolkit'
 import axios from 'axios'
-const URL = 'http://192.168.1.110:8800/api/message/'
+const URL = 'http://192.168.1.147:8800/api/message/'
 
 export const fetchMessage = createAsyncThunk(
     'socket/fetchMessage',async(id,{rejectWithValue})=>{

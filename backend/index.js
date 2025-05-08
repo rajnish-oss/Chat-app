@@ -8,6 +8,10 @@ dotenv.config()
 import { Server } from 'socket.io'
 import cookieParser from 'cookie-parser'
 import { errorMiddleware } from './middleware/error_middleware.js'
+import { saveAndIndexMessage } from './controller/chroma_controller.js';
+import { buildPrompt } from './utils/prompBuilder.js';
+import { askGemini } from './utils/geminiClient.js';
+import Persona from './model/persona_model.js'
 
 const app = express()
 const server = createServer(app)
@@ -16,7 +20,7 @@ app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({
-    origin:["http://localhost:3000","http://192.168.1.110:3000"],
+    origin:["http://localhost:3000","http://192.168.1.147:3000"],
     methods:["GET","POST","DELETE","PUT"],
     credentials: true,
 }))
@@ -24,7 +28,7 @@ app.use("/api",routes)
 
 const io = new Server(server,{
     cors:{
-        origin:["http://localhost:3000","http://192.168.1.110:3000"],
+        origin:["http://localhost:3000","http://192.168.1.147:3000"],
         credentials:true
     }}
 )
@@ -51,23 +55,47 @@ io.on("connection",(socket)=>{
         socket.in(room).emit("stop typing...")
     })
 
-    socket.on("new Message",(newMessage)=>{
-        console.log("messagedata",newMessage)
-        const chat = newMessage.chat
-        console.log(newMessage)
-        if(!chat.users){
-            return
-        }
 
-        chat.users.forEach((user)=>{
-            if(user._id === newMessage.sender._id){
-               socket.emit("received message",newMessage)
-            }else{
-                 socket.to(user._id).emit("received message",newMessage)
-            }    
-        })
-        
-    })
+    socket.on("new Message", async (newMessage) => {
+        const chat = newMessage.chat;
+        const senderId = newMessage.sender._id;
+        const content = newMessage.content;
+    
+        if (!chat?.users) return;
+    
+        const userMsg = await saveAndIndexMessage({
+            chat: chat._id,
+            sender: senderId,
+            content: content
+        });
+    
+        chat.users.forEach((user) => {
+            if (user._id === senderId) {
+                socket.emit("received message", userMsg);
+            } else {
+                socket.to(user._id).emit("received message", userMsg);
+            }
+        });
+    
+        // AI Trigger
+        const persona = await Persona.findOne({ chatId: chat._id });
+        if (!persona) return;
+    
+        const aiName = persona.name;
+        if (content.toLowerCase().includes(aiName.toLowerCase())) {
+            const prompt = await buildPrompt(chat, senderId, content);
+            const aiText = await askGemini(prompt);
+    
+            const aiMsg = await saveAndIndexMessage({
+                chat: chat._id,
+                sender: aiName,
+                content: aiText
+            });
+    
+            io.to(chat._id).emit("newMessage", aiMsg);
+        }
+    });
+    
 
      socket.on("disconnect",()=>{
         console.log("a user disconnected",socket.id)

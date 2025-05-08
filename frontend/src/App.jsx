@@ -40,11 +40,14 @@ function App() {
  return(
   <>
    <Suspense fallback={<Load>
-    <div className="dot-container">
+    <div className="dot-body w-screen h-screen flex justify-center items-center">
+      <div className="dot-container">
       <div className="dot"></div>
       <div className="dot"></div>
       <div className="dot"></div>
-    </div></Load>} >
+    </div>
+    </div>
+    </Load>} >
      <Routes>
         <Route element={<Layout/>} >
           <Route path='/' element={<Navigate to={"/chat"}/>} />

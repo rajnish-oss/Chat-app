@@ -1,5 +1,4 @@
 import mongoose, { mongo, Schema } from "mongoose";
-import User from './user_model.js'
 
 const messageSchema = new mongoose.Schema({
     sender:{
