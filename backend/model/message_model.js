@@ -12,6 +12,11 @@ const messageSchema = new mongoose.Schema({
     chat:{
         type:Schema.Types.ObjectId,
         ref:"Chat"
+    },
+    aiSender:{
+        type:Schema.Types.ObjectId,
+        ref:"Persona",
+        required:false
     }
 },{
     timestamps:true

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch,useSelector } from 'react-redux'
 import {getAllChats,changeChatName} from '../redux/slice/chatSlice.js'
 import MagicWand from './MagicWand';
-import { Socket } from './Socket.jsx';
 import { GiHamburgerMenu } from "react-icons/gi";
 import { HiArrowLongLeft } from "react-icons/hi2";
 
@@ -10,7 +9,7 @@ const Sidebar = ({selectedChatId,setSelectedChatId,sidebar,setSidebar}) => {
    
  const {user} = useSelector((state)=>state.auth)
  const {data,success} = useSelector((state)=>state.chat.chat)
- console.log(data)
+ 
  const dispatch = useDispatch()
 
  useEffect(()=>{
@@ -37,9 +36,10 @@ const Sidebar = ({selectedChatId,setSelectedChatId,sidebar,setSidebar}) => {
      </div>
 
       <div className="overflow-x-scroll md:h-[73vh] h-[70vh] " style={{scrollbarWidth:'none'}}>
-        { success && Array.isArray(data) && data.map((chat) => {
-          const otherUser = chat.users.find((users) => user._id !== users._id)
-          console.log(chat)
+        { Array.isArray(data) && data.map((chat) => {
+          
+          const otherUser = chat?.users.find((users) => users._id !== user._id)
+
           return(
           <div className={`flex items-center mx-4 my-5 p-2 rounded-4xl ${selectedChatId === chat._id ? "bg-white/15" : " bg-white/5"}  `} onClick={()=>{setSelectedChatId(chat._id) ; setSidebar(false)}}  key={chat._id}>
             <span className='inline-block rounded-full bg-white'>

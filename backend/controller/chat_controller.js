@@ -21,7 +21,7 @@ export const OnOchat = asyncHandler(async(req,res)=>{
     if(!user){
         throw new ApiError(
             400,
-            "user not present in OnOchatd"
+            "user doesn't exist"
         )
     }
 

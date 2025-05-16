@@ -14,7 +14,7 @@ const ChatOption = ({chatID}) => {
    const [addAi,setAddAi] = useState(false)
 
     const dispatch = useDispatch()
-    console.log(chatID)
+
     const handleLeaveChat = () => {
       dispatch(userLeft({ chatId: chatID })).unwrap()
       .then(() => {if (status === "succeded") {
@@ -28,7 +28,7 @@ const ChatOption = ({chatID}) => {
     <div className="">
     <Menu>
     <MenuButton><BsThreeDotsVertical/></MenuButton>
-    <MenuItems anchor="bottom end" className="relative z-50 bg-[#0B0C14] text-blue-100 w-35 p-2 rounded-2xl border-2 border-[#262b46]" >
+    <MenuItems anchor="bottom end" className="relative flex flex-col z-50 bg-[#0B0C14] text-blue-100 w-35 p-2 rounded-2xl border-2 border-[#262b46]" >
       <MenuItem>
         <button className="data-focus:bg-white/5 rounded-2xl my-1 flex justify-center" onClick={()=>setAddAi(true)}>
           AI persona

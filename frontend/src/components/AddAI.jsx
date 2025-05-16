@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import {createAI} from '../redux/slice/AISlice.js'
 
-const AddAI = ({chatID}) => {
+const AddAI = ({chatID,setAddAi}) => {
   const [AIname,setAIName] = useState("")
   const [role,setRole] = useState("")
   const dispatch = useDispatch()
@@ -15,6 +15,7 @@ const AddAI = ({chatID}) => {
       chatId:chatID
     }
     dispatch(createAI(data))
+    setAddAi(false)
     } 
   }
 
@@ -25,14 +26,14 @@ const AddAI = ({chatID}) => {
        type="text"
        name="aiName"
       placeholder="enter name of AI"
-       className="outline-blue-400 w-50 items-center text-center border-0 rounded-2xl placeholder:text-xl bg-[#1e2b43]"
+       className="outline-blue-400 w-[12vw] items-center text-center border-0 rounded-2xl placeholder:text-xl bg-[#1e2b43]"
        onChange={(e) => setAIName(e.target.value)}
       />
       <input
       type="text"
       name="role"
       placeholder="enter role of AI"
-      className="outline-blue-400 w-50 items-center text-center border-0 rounded-2xl placeholder:text-xl bg-[#1e2b43]" 
+      className="outline-blue-400 w-fit max-w-[12vw] items-center text-center border-0 rounded-2xl placeholder:text-xl text-md bg-[#1e2b43]" 
       onChange={(e) => setRole(e.target.value)}
       />
       <button className='text-xl px-2 rounded-2xl bg-blue-600' onClick={()=>AIdata()}>

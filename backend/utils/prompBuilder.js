@@ -3,21 +3,23 @@ import Persona from '../model/persona_model.js'
 import {embedding} from './embedding.js'
 import {getCollection} from './chroma.js'
 
-export const buildPrompt = async(chat,senderId,content) => {
-    const persona = await Persona.findOne({chatId:chat._id})
-    const intro = persona ? `System : you are a human with name ${persona.name},You are ${persona.role} and master of this field` : ""
+export const buildPrompt = async(persona,chat,senderId,content) => {
+
+    console.log("buildprompt",chat._id,senderId,content)
+
+    const intro = persona ? `System : you are a human with name ${persona.name},You are ${persona.role}, you are no more a AI you are now this persona ` : ""
 
     const recent = await Message.find({ chat:chat._id }).sort({ timestamp: -1 }).limit(20);
     const recentText = recent.reverse().map(m => `${m.sender === senderId ? 'User' : 'AI'}: ${m.text}`).join('\n');
 
     const coll = await getCollection();
     const genEmbedding = await embedding(content);
-    const { metadatas } = await coll.query({ 
-        queryEmbeddings: [ genEmbedding ],
+    const  {metadatas}  = await coll.query({ 
+        queryEmbeddings: [ genEmbedding.values ],
         nResults:5,
-        where:{ chat:chat._id } }).then(r => r[0]);
-  
-    const memory = metadatas.length ? 'Relevant past excerpts:\n' + metadatas.map(md => `- (${new Date(md.timestamp).toLocaleString()}): ${md.text}`  ).join('\n') + '\n\n' : '';
+        where:{ chatId:chat._id } })
+    const meta = metadatas && metadatas.length ? metadatas[0] : ""
+    const memory = meta.length ? 'Relevant past excerpts:\n' + meta.map(md => `- (${new Date(md.timestamp).toLocaleString()}): ${md.text}`  ).join('\n') + '\n\n' : '';
 
     return intro + memory + recentText + `User: ${content}\nAI:`;
 }

@@ -16,7 +16,7 @@ export const createChat = createAsyncThunk(
       return res.data
     } catch (error) {
       console.error(error.response.data)
-      rejectWithValue(error.response.data.message)
+      return rejectWithValue(error.response.data.message)
     }
   }
 )
@@ -32,7 +32,7 @@ export const getAllChats = createAsyncThunk(
             return res.data
         } catch (error) {
             console.log(error)
-            rejectWithValue(error.response.data.message)
+           return rejectWithValue(error.response.data.message)
         }
     }
 )
@@ -50,6 +50,7 @@ export const createGchat = createAsyncThunk(
       return res.data
     } catch (error) {
       console.error(error.response)
+      return rejectWithValue(error.response.data.message)
     }
   }
 )
@@ -64,6 +65,7 @@ export const GCdp = createAsyncThunk(
       return res.data
     } catch (error) {
       console.error(error.response)
+      return rejectWithValue(error.response.data.message)
     }
   }
 )
@@ -99,35 +101,40 @@ const chatSlice = createSlice({
         state.status = "loading"
       })
       .addCase(createChat.fulfilled,(state,action)=>{
-        state.status = "succeded",
-        console.log(action.payload)
-        state.chat = action.payload
+        state.status = "succeded"
+        const exist = state.chat.data.some((d)=>d._id === action.payload.data._id)
+        
+        if(!exist){
+          state.chat.data = [...state.chat.data,action.payload.data]
+        }
       })
       .addCase(createChat.rejected,(state,action)=>{
-        state.status = "failled",
+        state.status = "failled"
         state.error = action.payload
       })
       .addCase(getAllChats.pending,(state)=>{
         state.status = "loading"
       })
       .addCase(getAllChats.fulfilled,(state,action)=>{
-        state.status = "succeded",
+        state.status = "succeded"
         state.chat = action.payload
       })
       .addCase(getAllChats.rejected,(state,action)=>{
-        state.status = "failled",
+        state.status = "failled"
         state.error = action.payload
       })
       .addCase(createGchat.fulfilled,(state,action)=>{
-        state.status = "succeded",
+        state.status = "succeded"
         state.chat = action.payload
       })
       .addCase(GCdp.fulfilled,(state,action)=>{
-        state.status = "succeded",
+        state.status = "succeded"
         console.log(JSON.parse(JSON.stringify(state.chat)))
       })
       .addCase(userLeft.fulfilled,(state,action)=>{
         state.status = "succeded" 
+        console.log(JSON.parse(JSON.stringify(state.chat)),action.payload)
+        state.chat.data = state.chat.data.filter((d)=>d._id !== action.payload.data._id)
       })
     }
 })

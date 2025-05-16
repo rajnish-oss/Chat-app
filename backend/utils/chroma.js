@@ -1,7 +1,7 @@
 import { ChromaClient } from "chromadb";
 
 const chroma = new ChromaClient({
-    url:"http://localhost:8000"
+    url:"http://127.0.0.1:8000"
 });
 const COLLECTION = 'chat_memories'
 

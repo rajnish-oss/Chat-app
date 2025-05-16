@@ -19,6 +19,8 @@ const initialState ={
     msg:""
 }
 
+
+
 const messageSlice = createSlice({
     name: "message",
     initialState,
@@ -28,7 +30,9 @@ const messageSlice = createSlice({
           //
           .addCase(storeMessage.fulfilled,(state,action)=>{
             state.msg = action.payload
-          })
+            })
+          
+          
     }
 })
 

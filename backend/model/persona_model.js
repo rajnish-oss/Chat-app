@@ -1,10 +1,10 @@
 import mongoose, { Schema } from 'mongoose'
 
 const PersonaSchema = new mongoose.Schema({
-    chatId:[{
+    chatId:{
         type:String,
         required:true
-    }],
+    },
     name:{
         type:String,
         default:"rex"
@@ -19,5 +19,5 @@ const PersonaSchema = new mongoose.Schema({
     }
 },{timestamps:true})
 
-const Persona = mongoose.model("persona",PersonaSchema)
+const Persona = mongoose.model("Persona",PersonaSchema)
 export default Persona

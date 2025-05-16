@@ -20,7 +20,7 @@ app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({
-    origin:["http://localhost:3000","http://192.168.1.147:3000"],
+    origin:["http://localhost:3000","http://192.168.1.105:3000"],
     methods:["GET","POST","DELETE","PUT"],
     credentials: true,
 }))
@@ -28,7 +28,7 @@ app.use("/api",routes)
 
 const io = new Server(server,{
     cors:{
-        origin:["http://localhost:3000","http://192.168.1.147:3000"],
+        origin:["http://localhost:3000","http://192.168.1.105:3000"],
         credentials:true
     }}
 )
@@ -47,12 +47,14 @@ io.on("connection",(socket)=>{
         socket.emit("user joined room",room)
     })
 
-    socket.on("typing",(room)=>{
-        socket.in(room).emit("typing...")
+    socket.on("typing",({room,typer})=>{
+        console.log("typer connected",room,typer)
+        socket.broadcast.emit("typing-Broad",{room,typer})
     })
 
-    socket.on("stop typing",(room)=>{
-        socket.in(room).emit("stop typing...")
+    socket.on("stop typing",({room})=>{
+        console.log("typer dis connected",room)
+        socket.broadcast.emit("stop typing...",room)
     })
 
 
@@ -60,7 +62,7 @@ io.on("connection",(socket)=>{
         const chat = newMessage.chat;
         const senderId = newMessage.sender._id;
         const content = newMessage.content;
-    
+      console.log(newMessage)
         if (!chat?.users) return;
     
         const userMsg = await saveAndIndexMessage({
@@ -71,29 +73,39 @@ io.on("connection",(socket)=>{
     
         chat.users.forEach((user) => {
             if (user._id === senderId) {
-                socket.emit("received message", userMsg);
+                socket.emit("received message", userMsg);  
             } else {
                 socket.to(user._id).emit("received message", userMsg);
             }
         });
     
         // AI Trigger
-        const persona = await Persona.findOne({ chatId: chat._id });
-        if (!persona) return;
-    
+        const personas = await Persona.find({ chatId: chat._id });
+        if (!personas) return;
+
+        personas.map(async(persona)=>{
         const aiName = persona.name;
+        
+        console.log(content)
         if (content.toLowerCase().includes(aiName.toLowerCase())) {
-            const prompt = await buildPrompt(chat, senderId, content);
+            io.to(chat._id).emit('aiTyping',aiName,(ack)=>{
+                console.log("ack is looged",ack)
+            })
+            console.log("log this",chat._id,aiName,(ack)=>{
+                console.log("ack is looged",ack)
+            })
+            console.log("logging this",socket.broadcast.emit('aiTyping',aiName))
+            const prompt = await buildPrompt(persona,chat, senderId, content);
+            console.log("prompt",prompt)
             const aiText = await askGemini(prompt);
-    
+   
             const aiMsg = await saveAndIndexMessage({
                 chat: chat._id,
-                sender: aiName,
+                aiSender: persona,
                 content: aiText
             });
-    
-            io.to(chat._id).emit("newMessage", aiMsg);
-        }
+            socket.emit("aiMsg",aiMsg)
+        }})
     });
     
 

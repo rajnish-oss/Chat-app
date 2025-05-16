@@ -3,6 +3,7 @@ import { lazy,Suspense } from 'react'
 import {Navigate,useLocation,Routes,Route,Outlet} from 'react-router'
 import styled from 'styled-components'
 import { useDispatch,useSelector } from 'react-redux'
+import LandingPage from './pages/LandingPage'
 
 const CreateUser = lazy(()=>import('./pages/CreateUser'))
 const Chat = lazy(()=>import('./pages/Chat'))
@@ -33,7 +34,7 @@ function Layout(){
           </div>
         </main>
     </div>
-  ):<Navigate to="/createUser" state={{from:location}} replace/>
+  ):<Navigate to="/" state={{from:location}} replace/>
 }
 
 function App() {
@@ -49,11 +50,11 @@ function App() {
     </div>
     </Load>} >
      <Routes>
+      <Route path='/' element={<LandingPage/>}/>
         <Route element={<Layout/>} >
-          <Route path='/' element={<Navigate to={"/chat"}/>} />
-           <Route path='/chat' element={<Chat/>} />
+        <Route path='/chat' element={<Chat/>} />
         </Route>
-        <Route path='/createUser' element={<CreateUser/>}/>
+        <Route path='/createUser' element={<CreateUser/>} ></Route>
      </Routes>
    </Suspense>
   </>

@@ -8,7 +8,6 @@ export const embedding = async (text) => {
 
   try {
     const result = await model.embedContent(text);
-    console.log(result)
     return result.embedding;
     
   } catch (error) {

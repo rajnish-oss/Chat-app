@@ -23,10 +23,10 @@ export const createAI = asyncHandler(async(req,res) =>{
 
      if(!existingAI){
       const AI = await Persona.create({
-        chatId,
-        AIname,
-        role,
-        userId
+        chatId:chatId,
+        name:AIname,
+        role:role,
+        createdBy:userId
       })
 
       res.status(200).json(
@@ -48,35 +48,37 @@ export const createAI = asyncHandler(async(req,res) =>{
      }
 }) 
 
-export const saveAndIndexMessage = async({chat,sender,content}) =>{
+export const saveAndIndexMessage = async({chat,sender,content,aiSender}) =>{
    const saved = await Message.create({
     sender,
     content,
-    chat
+    chat,
+    aiSender
    })
-   console.log("main data",chat,sender,content)
+
+
    
-   console.log("saved._id",saved._id.toString())
    const embed = await embedding(saved.content)
    const batch = embed.values
-   console.log("batch",batch)
-   const timeStamp = saved.createdAt.toISOString()
 
    const coll = await getCollection();
-   await coll.upsert([{
-     id:saved._id.toString(),
+   await coll.upsert({
+     ids:saved._id.toString(),
      embeddings:batch,
-     documents:[
-      "this is about AI chat bots"
-     ],
-     metadata: {
-       chatId:    saved.chat,
-       timestamp: timeStamp,
+     metadatas: [{
+       chatId:    saved.chat.toString(),
+       timestamp: saved.createdAt.toISOString(),
        text:      saved.content
-     }
-   }]);
+     }]
+   });
+
+   const result = await Message.findById(saved._id).populate("sender","username email")
+   .populate("aiSender","name role")
+      .populate({
+        path:"chat",populate:{path:"users",select:"username email"}
+      })
  
-   return saved;
+   return result;
 }
 
 

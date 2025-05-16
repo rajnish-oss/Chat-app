@@ -1,6 +1,7 @@
 import {createSlice,createAsyncThunk} from '@reduxjs/toolkit'
 import axios from 'axios'
-const URL = 'http://192.168.1.147:8800/api/message/'
+import axiosInstance from '../axiosInstance.js'
+const URL = 'http://192.168.1.105:8800/api/message/'
 
 export const fetchMessage = createAsyncThunk(
     'socket/fetchMessage',async(id,{rejectWithValue})=>{
@@ -16,17 +17,32 @@ export const fetchMessage = createAsyncThunk(
     }
 )
 
+export const deleteMsg = createAsyncThunk(
+    'msg/deleteMsg',async(msgId,{rejectWithValue})=>{
+        try {
+            const res = await axiosInstance.delete("message/deleteMsg/" + msgId,{
+                withCredentials:true
+            })
+
+            return res.data
+        } catch (error) {
+            console.log(error)
+            return rejectWithValue(error.reponse.data.message)
+        }
+    }
+)
+
 const socketSlice = createSlice({
     name:"socket",
     initialState:{
         messages:[],
         users:[],
-        typingUsers:[]
+        typingUsers:[],
     },
     reducers:{
         newMessageReceived:(state,action)=>{
             console.log(action.payload)
-            state.messages.push(action.payload)
+            state.messages = [...state.messages,action.payload]   
         },
         userTyping:(state,action)=>{
             if(!state.typingUsers.includes(action.payload)){
@@ -50,6 +66,9 @@ const socketSlice = createSlice({
         .addCase(fetchMessage.fulfilled,(state,action)=>{
             state.messages = action.payload.data
         })
+        .addCase(deleteMsg.fulfilled,(state,action)=>{
+            state.messages = state.messages.filter((u)=>u._id !== action.payload)
+          })
     }
 
 })

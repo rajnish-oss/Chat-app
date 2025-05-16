@@ -7,6 +7,6 @@ const routes = express.Router()
 
 routes.post("/sendmsg",auth,sendMessage)
       .get("/getMsg/:chatId",auth,getAllMessage)
-      .delete("/deleteMsg/:chatId",auth,deleteMsg)
+      .delete("/deleteMsg/:msgId",deleteMsg)
 
 export default routes

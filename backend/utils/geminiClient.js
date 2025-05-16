@@ -5,8 +5,8 @@ const gemini = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export async function askGemini(prompt) {
   const res = await gemini.models.generateContent({
-    model:'gemini-2-flash',
-    prompt,
+    model:'gemini-2.0-flash',
+    contents:prompt,
     maxTokens:  512,
     temperature: 0.7
   });
