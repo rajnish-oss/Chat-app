@@ -44,6 +44,7 @@ export const getAllMessage = asyncHandler(async(req,res)=>{
       }
 
       const messages = await Message.find({chat:chatId})
+      .populate("aiSender","name role")
       .populate("sender","username email")
       .populate({
         path:"chat",populate:{path:"users",select:"username email"}
@@ -66,18 +67,20 @@ export const getAllMessage = asyncHandler(async(req,res)=>{
 })
 
 export const deleteMsg = asyncHandler(async(req,res)=>{
-  const chatId = req.params.chatId
+  const msgId = req.params.msgId
 
-  if (!chatId) {
+  if (!msgId) {
       throw new ApiError(400, "Chat ID is required");
     }
 
-    const deletedMessages = await Message.findByIdAndDelete(userId)
+    const deletedMessages = await Message.findByIdAndDelete(msgId)
+
+    console.log(deletedMessages)
 
     res.status(200).json(
       new ApiResponse(
        200,
-       deletedMessages,
+       msgId,
       "message deleted"   
       )
     )

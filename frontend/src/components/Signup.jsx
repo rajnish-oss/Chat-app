@@ -23,7 +23,7 @@ const Signup = ({setNewUser}) => {
   const submitHandler = async(data) => {
     try {
     await dispatch(registerUser(data)).unwrap()
-                .then(()=>navigate("/"))
+                .then(()=>navigate("/chat"))
     } catch (error) {
       console.log(error)
        setBackendError(error.message)

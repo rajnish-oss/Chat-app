@@ -8,7 +8,7 @@ const auth = asyncHandler(async(req,res,next) =>{
 
     if(!refreshToken){
         throw new ApiError(
-            401,
+            501,
             "refreshToken not found, check auth middleware"
         )
     }

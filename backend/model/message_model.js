@@ -1,5 +1,4 @@
 import mongoose, { mongo, Schema } from "mongoose";
-import User from './user_model.js'
 
 const messageSchema = new mongoose.Schema({
     sender:{
@@ -13,6 +12,11 @@ const messageSchema = new mongoose.Schema({
     chat:{
         type:Schema.Types.ObjectId,
         ref:"Chat"
+    },
+    aiSender:{
+        type:Schema.Types.ObjectId,
+        ref:"Persona",
+        required:false
     }
 },{
     timestamps:true

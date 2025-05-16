@@ -40,7 +40,7 @@ const CreateGchat = ({users}) => {
       console.log("hi")
     }
     
-      useSocket(selectedUser)
+    selectedUser &&  useSocket(selectedUser) && console.log("selectedUser")
 
   return (
     <div className='inline-block bg-[#0f192b] absolute z-50 p-4 rounded-2xl w-[35vw] '>

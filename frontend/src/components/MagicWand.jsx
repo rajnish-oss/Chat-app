@@ -17,7 +17,6 @@ export default function MagicWand() {
     const [gChat,setGChat] = useState(false)
     const dispatch = useDispatch()
     const users = useSelector((state)=>state.auth.allUser)
-    console.log(users)
 
     useEffect(()=>{
       dispatch(getAllUser())
