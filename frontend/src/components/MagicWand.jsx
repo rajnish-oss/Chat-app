@@ -27,7 +27,7 @@ export default function MagicWand() {
     }
 
   return (
-    <div className="w-52 absolute z-50 ">
+    <div className="w-5 absolute z-50 ">
       <Menu>
         <MenuButton className="inline-flex items-center gap-2 rounded-md py-1.5 px-3 text-sm/6 font-semibold text-white   focus:outline-none data-[hover]:bg-gray-700 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white">
           <SlMagicWand className='text-xl transition duration-100 ease-out data-[closed]:rotate-90' />

@@ -16,7 +16,7 @@ const Sidebar = ({selectedChatId,setSelectedChatId,sidebar,setSidebar}) => {
     dispatch(getAllChats())
  },[sidebar,user])
 
-  return (<div className='relative flex items-center'>
+  return (<div className='relative flex items-center w-100 md:fit'>
     <div className={`h-[95vh] rounded-r-xl w-10 bg-[#0B0C14] border-[#0F111C] border-2 md:hidden ${sidebar?' hidden' : 'md:hidden inline-block'}`}>
     <span className='w-full flex justify-center mt-3 text-xl text-blue-50' onClick={()=>setSidebar(!sidebar)}>
     <GiHamburgerMenu />
@@ -24,7 +24,7 @@ const Sidebar = ({selectedChatId,setSelectedChatId,sidebar,setSidebar}) => {
     </span>
    </div>
     <div className={`bg-[#0B0C14] border-[#0F111C] border-4 left-2 w-full xl:w-[25vw] md:w-[30vw] h-[95vh] relative ${sidebar?'md:hidden inline-block' : 'md:inline-block hidden'} rounded-xl p-2`}>
-     <div className="flex items-center p-2 ml-2 relative">
+     <div className="flex items-center p-2 ml-2 relative w-full">
         <img src={user.avatar} alt="pf" className='inline-block bg-white h-15 w-15 rounded-full' />
       <div className="flex flex-col mx-4">
         <span className='text-white text-3xl mb-3'>{user.fullName}</span>
