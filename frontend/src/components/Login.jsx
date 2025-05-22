@@ -23,7 +23,7 @@ const Signup = ({setNewUser}) => {
     try {
     await dispatch(loginUser(data)).unwrap()
                 .then(reset())
-                .then(()=>navigate("/"))
+                .then(()=>navigate("/chat"))
     } catch (error) {
       console.log(error)
       setBackendError(error)

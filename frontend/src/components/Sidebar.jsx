@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch,useSelector } from 'react-redux'
 import {getAllChats,changeChatName} from '../redux/slice/chatSlice.js'
 import MagicWand from './MagicWand';
-import { Socket } from './Socket.jsx';
 import { GiHamburgerMenu } from "react-icons/gi";
 import { HiArrowLongLeft } from "react-icons/hi2";
 
@@ -10,14 +9,14 @@ const Sidebar = ({selectedChatId,setSelectedChatId,sidebar,setSidebar}) => {
    
  const {user} = useSelector((state)=>state.auth)
  const {data,success} = useSelector((state)=>state.chat.chat)
- console.log(data)
+ 
  const dispatch = useDispatch()
 
  useEffect(()=>{
     dispatch(getAllChats())
  },[sidebar,user])
 
-  return (<div className='relative flex items-center'>
+  return (<div className='relative flex items-center w-100 md:fit'>
     <div className={`h-[95vh] rounded-r-xl w-10 bg-[#0B0C14] border-[#0F111C] border-2 md:hidden ${sidebar?' hidden' : 'md:hidden inline-block'}`}>
     <span className='w-full flex justify-center mt-3 text-xl text-blue-50' onClick={()=>setSidebar(!sidebar)}>
     <GiHamburgerMenu />
@@ -25,7 +24,7 @@ const Sidebar = ({selectedChatId,setSelectedChatId,sidebar,setSidebar}) => {
     </span>
    </div>
     <div className={`bg-[#0B0C14] border-[#0F111C] border-4 left-2 w-full xl:w-[25vw] md:w-[30vw] h-[95vh] relative ${sidebar?'md:hidden inline-block' : 'md:inline-block hidden'} rounded-xl p-2`}>
-     <div className="flex items-center p-2 ml-2 relative">
+     <div className="flex items-center p-2 ml-2 relative w-full">
         <img src={user.avatar} alt="pf" className='inline-block bg-white h-15 w-15 rounded-full' />
       <div className="flex flex-col mx-4">
         <span className='text-white text-3xl mb-3'>{user.fullName}</span>
@@ -37,9 +36,10 @@ const Sidebar = ({selectedChatId,setSelectedChatId,sidebar,setSidebar}) => {
      </div>
 
       <div className="overflow-x-scroll md:h-[73vh] h-[70vh] " style={{scrollbarWidth:'none'}}>
-        { success && Array.isArray(data) && data.map((chat) => {
-          const otherUser = chat.users.find((users) => user._id !== users._id)
-          console.log(chat)
+        { Array.isArray(data) && data.map((chat) => {
+          
+          const otherUser = chat?.users.find((users) => users._id !== user._id)
+
           return(
           <div className={`flex items-center mx-4 my-5 p-2 rounded-4xl ${selectedChatId === chat._id ? "bg-white/15" : " bg-white/5"}  `} onClick={()=>{setSelectedChatId(chat._id) ; setSidebar(false)}}  key={chat._id}>
             <span className='inline-block rounded-full bg-white'>
