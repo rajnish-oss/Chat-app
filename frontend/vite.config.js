@@ -12,7 +12,7 @@ export default defineConfig({
     port:3000,
     proxy:{
       "/api":{
-        target:["http://localhost:8800","http://192.168.1.103:8800"],
+        target:["http://localhost:8800","https://bo-chat.onrender.com"],
         changeOrigin:true,
       }
     },
