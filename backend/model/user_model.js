@@ -50,7 +50,7 @@ userSchema.pre("save",async function(next){
     } catch (error) {
         throw new ApiError(
             400,
-            "error while bcrypt",
+            "error whil e bcrypt",
             error
         )
     }
