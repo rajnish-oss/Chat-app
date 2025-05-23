@@ -28,7 +28,7 @@ app.use("/api",routes)
 
 const io = new Server(server,{
     cors:{
-        origin:["http://localhost:3000","https://chat-app-mhsl.onrender.comm"],
+        origin:["http://localhost:3000","https://chat-app-mhsl.onrender.com"],
         credentials:true
     }}
 )
