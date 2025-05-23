@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "whatwg-url": "^11.0.0"
+  }
+}

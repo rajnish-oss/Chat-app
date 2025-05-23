@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://192.168.1.103:8800/api/',
+  baseURL: 'https://bo-chat.onrender.com/api/',
   withCredentials: true,
 });
 
