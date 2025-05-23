@@ -51,7 +51,7 @@ const LandingPage = () => {
             </button>
          </div>   
             <div className="self-center">
-              <img src="./public/hero.png" alt="hero" />
+              <img src="/hero.png" alt="hero" />
             </div>
         
       </header>
