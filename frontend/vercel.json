@@ -8,6 +8,19 @@
   ],
   "routes": [
     {
+      {
+      "src": "/",
+      "dest": "/"  // Let frontend handle it
+    },
+    {
+      "src": "/chat",
+      "dest": "/chat"   // Let frontend handle it
+    },
+    {
+      "src": "/createUser",
+      "dest": "/createUser"  // Let frontend handle it
+    },
+    {
       "src": "/api/(.*)",
       "dest": "https://bo-chat.onrender.com/api/$1"
     }
