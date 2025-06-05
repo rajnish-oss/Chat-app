@@ -10,15 +10,15 @@
     {
       {
       "src": "/",
-      "dest": "/"  // Let frontend handle it
+      "dest": "/"
     },
     {
       "src": "/chat",
-      "dest": "/chat"   // Let frontend handle it
+      "dest": "/chat"   
     },
     {
       "src": "/createUser",
-      "dest": "/createUser"  // Let frontend handle it
+      "dest": "/createUser"  
     },
     {
       "src": "/api/(.*)",
