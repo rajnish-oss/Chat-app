@@ -1,7 +1,7 @@
 import {createSlice,createAsyncThunk} from '@reduxjs/toolkit'
 import axios from 'axios'
 import axiosInstance from '../axiosInstance.js'
-const URL = 'http://localhost:8800/api/message/'
+const URL = 'https://bo-chat-backend.vercel.app/api/message/'
 
 export const fetchMessage = createAsyncThunk(
     'socket/fetchMessage',async(id,{rejectWithValue})=>{
