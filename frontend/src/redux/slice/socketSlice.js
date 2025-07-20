@@ -1,7 +1,7 @@
 import {createSlice,createAsyncThunk} from '@reduxjs/toolkit'
 import axios from 'axios'
 import axiosInstance from '../axiosInstance.js'
-const URL = 'https://bo-chat.onrender.com/api/message/'
+const URL = 'http://localhost:8800/api/message/'
 
 export const fetchMessage = createAsyncThunk(
     'socket/fetchMessage',async(id,{rejectWithValue})=>{
