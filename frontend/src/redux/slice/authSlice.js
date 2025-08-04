@@ -9,7 +9,7 @@ export const registerUser = createAsyncThunk(
             const res = await axiosInstance.post("user/register",userData,{
                 headers:{
                     "Content-Type":"application/json",
-                    "Authorization":`Bearer ${accessToken}`
+                    "Authorization":`Bearer ${token}`
                 },
                 withCredentials:true
             });
@@ -34,7 +34,7 @@ export const loginUser = createAsyncThunk(
             const res = await axiosInstance.post("user/login",userData,{
                 headers:{
                     "Content-Type":"application/json",
-                    "Authorization":`Bearer ${accessToken}`
+                    "Authorization":`Bearer ${token}`
                 },
                 withCredentials:true
             })
