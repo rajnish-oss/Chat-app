@@ -71,7 +71,7 @@ export const register = asyncHandler(async(req,res)=>{
 
      const option = {
       httpOnly:true,
-      secure:false
+      secure:true
      }
 
      if(!refreshToken || !accessToken){
@@ -136,7 +136,7 @@ export const login = asyncHandler(async(req,res)=>{
 
      const option = {
       httpOnly:true,
-      secure:false
+      secure:true
      }
 
      
