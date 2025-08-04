@@ -20,7 +20,7 @@ app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({
-    origin:["http://localhost:3000","https://bo-chat-six.vercel.app"],
+    origin:["http://localhost:3000","https://chat-app-xi-ten-95.vercel.app/"],
     methods:["GET","POST","DELETE","PUT"],
     credentials: true,
 }))
@@ -28,7 +28,7 @@ app.use("/api",routes)
 
 const io = new Server(server,{
     cors:{
-        origin:["http://localhost:3000","https://bo-chat-six.vercel.app"],
+        origin:["http://localhost:3000","https://chat-app-xi-ten-95.vercel.app/"],
         credentials:true
     }}
 )
