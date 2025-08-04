@@ -9,7 +9,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
   response => response,
   error => {
-    if (error.response?.status === 501) {
+    if (error.response?.status === 509) {
       // Token expired or user unauthorized
       window.location.href = 'createUser';
     }
